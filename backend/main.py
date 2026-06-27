@@ -19,6 +19,7 @@ origins = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
     "https://devonix-frontend.onrender.com",  # Render frontend
+    "https://devonix-app.vercel.app",         # Add your live Vercel app URL here 🚀
 ]
 
 # Add from environment if specified (for production deployments)
