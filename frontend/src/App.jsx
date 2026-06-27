@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Send, Code, Loader2, RefreshCw, ChevronDown, Check, AlertCircle, Eye, FileJson } from 'lucide-react';
 import { SandpackProvider, SandpackLayout, SandpackPreview, SandpackCodeEditor, SandpackFileExplorer } from "@codesandbox/sandpack-react";
 
+// Get API URL from environment or default to localhost
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
 // --- STREAMING CENTER DISPLAY ---
 function StreamingCenter({ isGenerating, streamingMessages, onClose }) {
   if (!isGenerating && streamingMessages.length === 0) return null;
@@ -102,7 +105,7 @@ function RemotePreview({ projectName, refreshTrigger }) {
     const fetchFiles = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://127.0.0.1:8000/project/${projectName}`);
+        const res = await fetch(`${API_URL}/project/${projectName}`);
         if (!res.ok) throw new Error("Project not found yet.");
         const data = await res.json();
         setFiles(data.files);
@@ -213,7 +216,7 @@ function BuilderChat() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/projects");
+        const res = await fetch(`${API_URL}/projects`);
         const data = await res.json();
         setProjects(data.projects || []);
         if (data.projects && data.projects.length > 0) {
@@ -232,7 +235,7 @@ function BuilderChat() {
 
     const loadHistory = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/history/${projectName}`);
+        const res = await fetch(`${API_URL}/history/${projectName}`);
         if (!res.ok) throw new Error("Failed to fetch history");
         
         const data = await res.json();
@@ -296,7 +299,7 @@ function BuilderChat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/generate-stream", {
+      const response = await fetch(`${API_URL}/generate-stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ task: newMsg.text, project_name: projectName })
